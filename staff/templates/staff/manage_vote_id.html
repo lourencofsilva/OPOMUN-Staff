@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block customcss %}
+ <meta http-equiv="refresh" content="3" />
+{% endblock %}
+
+{% block bodycontent %}
+<style>
+    body {
+        background-color: black;
+        color: white;
+        text-align: center;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    .column {
+      flex: 33%;
+    }
+
+    .column2 {
+      flex: 50%;
+    }
+
+    #end_voting {
+        color: red;
+        border: 5px solid white;
+        width: 20vw;
+        margin: auto;
+        cursor: default;
+    }
+
+    h1 {
+        padding-top: 4vh;
+        padding-bottom: 18vh;
+    }
+
+    #row2 {
+        padding-top: 18vh;
+        padding-bottom: 5vh;
+    }
+
+    @media screen and (max-width: 600px) {
+      .column, .column2 {
+        flex: 100%;
+      }
+    }
+</style>
+    <h1>{{ voting }}</h1>
+    <div class="row">
+      <div class="column">
+          <h3>In Favour</h3>
+          <h3>{{ voting.in_favour }}</h3>
+      </div>
+      <div class="column">
+          <h3>Against</h3>
+          <h3>{{ voting.against }}</h3>
+      </div>
+        <div class="column">
+            <h3>Abstentions</h3>
+          <h3>{{ voting.abstention }}</h3>
+        </div>
+    </div>
+    <div class="row" id="row2">
+      <div class="column2">
+          <h3>Available Voters</h3>
+          <h3>{{ voters_available }}</h3>
+      </div>
+      <div class="column2">
+          <h3>Votes Submitted</h3>
+          <h3>{{ votes_submitted }}</h3>
+      </div>
+    </div>
+    <h3 id="end_voting">End Voting Procedure</h3>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        document.getElementById("end_voting").onclick = function () {
+            if (confirm("Are you sure that you wish to end this voting procedure. This action cannot be undone!")) {
+                window.location.replace("/end-voting/".concat({{ voting.id }}).concat("/"));
+            }
+        }
+    </script>
+{% endblock %}

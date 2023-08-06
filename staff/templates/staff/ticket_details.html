@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Website Title -->
+    <title>OPOMUN STAFF</title>
+
+    <!-- Styles -->
+    <link type="text/css" rel="stylesheet" href="/static/css/main.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+<body onload="runalert()">
+<noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+</noscript>
+    {% if security and allowed and registered %}
+    <div class='arrow-right' id="arrow-right">
+        <div class='arrow-mask' id="arrow-mask"></div>
+    </div>
+    {% endif %}
+    <div id="overlay"></div>
+    <div id="overlaytext">
+    {% if ticket %}
+        {% if allowed %}
+            {% if details %}
+                {% if not ticket.has_registered and ticket.ticket_type.id != CUSTOM_GUEST_ID and ticket.ticket_type.id != CUSTOM_STAFF_ID %}<button class="medium red button" onclick="register()">REGISTER TICKET (IF FORGOTTEN)</button><br><br>{% endif %}<h5><b>DETAIL LOOKUP<br>Ticket Valid!</b><br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Registered: {{ ticket.has_registered }}{% if ticket.registered_datetime %}<br>Registered On: {{ ticket.registered_datetime }}<br>Registered By: {{ ticket.registered_by }}{% endif %}<br>In Venue: {{ ticket.in_venue }}<br><br>Name: {{ ticket.name }}{% if ticket.school_name %}<br>School: {{ ticket.school_name }}{% endif %}{% if chaperone %}<br>Main Chaperone: {{ chaperone }}{% endif %}{% if ticket.committee %}<br>Committee: {{ticket.committee }}{% endif %}{% if ticket.country %}<br>Allocated Country: {{ticket.country}}{% endif %}<br><br></h5>
+            {% elif security %}
+                {% if security_allowed%}
+                    <h5><b>SECURITY SCAN<br>VALID FOR {{ security_type|upper }}</b><br>{% if floor %}ASSIGNED FLOOR: {{ floor }}{% endif %}<br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Name: {{ ticket.name }}</h5>
+                {% elif clipstaff %}
+                    <h5><b><br>SECURITY SCAN<br>VALID FOR {{ security_type|upper }}</b><br><br><img height="200px" src={{ url }}></h5>
+                {% elif not security_allowed and registered %}
+                    <h5><b>SECURITY SCAN<br>INVALID FOR {{ security_type|upper }}</b><br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Name: {{ ticket.name }}</h5>
+                {% else %}
+                    <h5><b>SECURITY SCAN<br>TICKET NOT YET ACTIVATED</b><br>{% if ticket.ticket_type.id == CUSTOM_STAFF_ID or ticket.ticket_type.id == CUSTOM_GUEST_ID %}Please Get Systems Manager for Help. Do not allow {{ security_type }}.{% else %}Please Redirect to Registration / Get Help from Systems Manager. Do not allow {{ security_type }}.{% endif %}<br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Name: {{ ticket.name }}</h5>
+                {% endif %}
+            {% elif conditions %}
+                <h5><b>CONDITIONS SCAN</b><br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Name: {{ ticket.name }}{% if ticket.school %}<br>School: {{ ticket.school }}{% endif %}<br><br>Dietary Restrictions:<br>{{ ticket.dietary_restrictions }}<br><br>Medical Conditions:<br>{{ ticket.medical_conditions }}</h5>
+            {% else %}
+                {% if register %}
+                <h5><b>REGISTRATION SCAN<br>Ticket Valid & Now Registered!</b><br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Name: {{ ticket.name }}{% if ticket.school %}<br>School: {{ ticket.school }}{% endif %}</h5>
+                {% else %}
+                <h5><b>REGISTRATION SCAN<br>Ticket UNREGISTERED!</b><br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Name: {{ ticket.name }}{% if ticket.school %}<br>School: {{ ticket.school }}{% endif %}</h5>
+                {% endif %}
+            {% endif %}
+        {% else %}
+                <h5><b>ATTENTION</b><br><br>Ticket Already Registered!<br>Registered By: {{ ticket.registered_by }}<br>Registered On: {{ ticket.registered_datetime }}<br><br>TYPE: {{ ticket.ticket_type.name|upper }}{% if ticket.staff_type %} {{ ticket.get_staff_type_display|upper }}{% endif %}<br>Name: {{ ticket.name }}{% if ticket.school %}<br>School: {{ ticket.school }}{% endif %}</h5>
+        {% endif %}
+    {% else %}
+        <h5>Ticket Invalid! Not found in database. Please Retry</h5>
+    {% endif %}
+        <br><button class="medium blue button" onclick="redirect()">OK</button>
+    </div>
+
+    <script type="text/javascript">
+    function runalert() {
+        {% if ticket %}
+            {% if allowed %}
+                document.getElementById("overlay").style.background = "rgb(11,173,0)";
+            {% endif %}
+            {% if security %}
+                {% if security_allowed %}
+                document.getElementById("overlay").style.background = "rgb(11,173,0)";
+                {% elif not security_allowed and registered %}
+                document.getElementById("overlay").style.background = "rgb(255,120,0)";
+                document.getElementById("arrow-mask").style.background = "rgb(255,120,0)";
+                document.getElementById("overlaytext").style.color = "black";
+                {% else %}
+                document.getElementById("overlay").style.background = "rgba(255,0,0,1.0)";
+                {% endif %}
+                {% if security_type == "Entry" %}
+                    document.getElementById("arrow-mask").style.left = "-15%";
+                    document.getElementById("arrow-mask").style.top = "-15%";
+                    document.getElementById("arrow-right").style.top = "70%";
+                {% else %}
+                    document.getElementById("arrow-mask").style.left = "15%";
+                    document.getElementById("arrow-mask").style.top = "15%";
+                {% endif %}
+             {% endif %}
+            {% if not allowed %}
+                document.getElementById("overlay").style.background = "rgb(255,120,0)";
+                document.getElementById("overlaytext").style.color = "black";
+            {% endif %}
+        {% else %}
+            document.getElementById("overlay").style.background = "rgba(255,0,0,1.0)";
+        {% endif %}
+        {% if trip %}
+            document.getElementById("arrow-right").style.display = "none";
+        {% endif %}
+    }
+
+    function redirect() {
+        {% if search %}
+            window.location.replace("/search/");
+        {% elif in_venue %}
+            window.location.replace("/statistics-in-venue/");
+        {% elif by_committee %}
+            window.location.replace("/statistics-by-committee/");
+        {% elif statistics_not_registered %}
+            window.location.replace("/statistics-not-registered/");
+        {% elif details %}
+            window.location.replace("/details-scanner/");
+        {% elif security_type == "Entry" %}
+            window.location.replace("/security-scanner-entry/");
+        {% elif security_type == "Exit" %}
+            window.location.replace("/security-scanner-exit/");
+        {% elif conditions %}
+            window.location.replace("/conditions-scanner/");
+        {% else %}
+            window.location.replace("/registration-scanner/");
+        {% endif %}
+    }
+
+    function register() {
+        window.location.replace("/registration-details/{{ ticket.id }}/");
+    }
+    </script>
+</body>

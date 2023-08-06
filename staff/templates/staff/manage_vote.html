@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+<div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Manage Votings<br></h5>
+              {% for committee in committeees %}
+                  {% if committee.id not in remove %}
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/manage-vote-id/'.concat({{ committee.id }}).concat('/');">{{ committee.name }}</button>
+                  {% endif %}
+              {% endfor %}
+              <button class="btn btn-lg btn-secondary btn-block text-uppercase" onclick="window.location.replace('/');">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block customcss %}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mobile-detect@1.4.4/mobile-detect.min.js"></script>
+{% endblock %}
+
+
+{% block bodycontent %}
+<body onload="runalert()">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <div class="row-element">
+        <div class="form-field form-field-memo">
+          <div class="form-field-caption-panel">
+            <div class="gwt-Label form-field-caption">
+              <b>Attendee Database Search</b><br>Search by Name:<br><br>
+            </div>
+          </div>
+          <div class="FlexPanel form-field-input-panel">
+            <input type="text" id="dbsearchtext" placeholder="Search..">
+              <button id="searchbutton" onclick="dbsearch()">Submit</button>
+          </div>
+        </div>
+    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <script type="text/javascript">
+
+    function runalert()
+    {
+        var md = new MobileDetect(window.navigator.userAgent);
+        if (md.os() === "iOS" && md.userAgent() !== "Safari") {
+            alert("ALERT\r\n\r\nYou are currently running iOS.\r\nSearching is only supported with Safari.\r\nPlease open this website in Safari.")
+            window.location.replace("/");
+        }
+    }
+
+    function isEmptyOrSpaces(str){
+        return str === null || str.match(/^\s*$/) !== null;
+    }
+
+    function dbsearch()
+    {
+        var txt1 = "/dbsearch/";
+        var txt2 = document.getElementById("dbsearchtext").value;
+        if (isEmptyOrSpaces(txt2)) {
+              alert("Search Query Cannot Be Empty!")
+        } else {
+            window.location.href = txt1 + txt2 + "/";
+        }
+    }
+
+    var input = document.getElementById("dbsearchtext");
+    input.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("searchbutton").click();
+        }
+    });
+</script>
+{% endblock %}

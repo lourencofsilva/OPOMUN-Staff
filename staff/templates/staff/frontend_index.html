@@ -1,0 +1,58 @@
+{% extends "frontend_base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+  <div class="container center">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body centered">
+              <label for="token">Voting Code:</label>
+              <input type="text" name="token" id="token" pattern="^[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$"/>
+              <br><br>
+              <button type="button" class="btn btn-secondary" id="login_button">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+
+        {% if alert %}
+            document.body.onload = function () {
+                alert("The voting code you entered is invalid. Please check again and make sure that you are typing it correctly in the format of '1234-5678', including the hyphen.");
+            }
+        {% endif %}
+
+        document.getElementById("token").addEventListener("keyup", function(event) {
+          if (event.keyCode === 13) {
+            document.getElementById("login_button").click();
+          }
+        });
+
+        document.getElementById("login_button").onclick = function () {
+            const code = document.getElementById("token").value.replace(/\s+/g, '');
+            if (/^[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$/.test(code)) {
+                window.location.href = "/frontend/vote/?auth=".concat(encodeURI(code));
+            } else {
+                alert("The voting code you entered is invalid. Please check again and make sure that you are typing it correctly in the format of '1234-5678', including the hyphen.");
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            overflow-y: hidden;
+        }
+
+        .center {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 500px;
+        }
+    </style>
+{% endblock %}

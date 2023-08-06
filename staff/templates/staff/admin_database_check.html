@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">CHECK COMPLETED<br><br>{% if erroroutput == None %}No Errors Found{% else %}Errors Found, Log Below and sent to Slack:{% endif %}<br><br></h5>
+                {% if erroroutput != None %}{% for output in erroroutput %}<h5 class="card-title text-center">{{ output }}<br><br></h5>{% endfor %}{% endif %}
+                  <button class="btn btn-lg btn-secondary btn-block text-uppercase" onclick="window.location.replace('/admin-tools/');">Home</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

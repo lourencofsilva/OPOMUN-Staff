@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">Attendee List For {{committee}}:</h5>
+              <div class="centered">
+              {% if exists %}
+                  {% for item in queryanswer %}
+                <a href="/statistics-by-committee-barcode-details/{{ item.id }}/"><br><br>
+                {% if item.in_venue %}<button class="small green button">In Venue</button>{% else %}<button class="small red button">Not In Venue</button>{% endif %}      {{ item.name }} - {{ item.country }}</a>
+            {% endfor %}
+              {% else %}
+                <b><br><br>No Matching Data Found!</b>
+              {% endif %}
+                      <br><br><br><br><button class="btn btn-lg btn-secondary btn-block text-uppercase" onclick="window.location.replace('/statistics-by-committee/');">Go Back</button>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

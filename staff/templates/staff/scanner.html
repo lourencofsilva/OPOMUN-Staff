@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block customcss %}
+    <script type="text/javascript" src="/static/js/jsqrscanner.nocache.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mobile-detect@1.4.4/mobile-detect.min.js"></script>
+{% endblock %}
+
+{% block bodycontent %}
+    <body onload="runalert()">
+    <div class="row-element-set row-element-set-QRScanner">
+      <h1><b>{{ header }}</b></h1>
+    </div>
+      <br>
+      <div class="row-element">
+        <div class="qrscanner" id="scanner"></div>
+      </div>
+
+    <div class="row-element">
+        <div class="form-field form-field-memo">
+          <div class="form-field-caption-panel">
+            <div class="gwt-Label form-field-caption">
+                {% if header == "Registration" %}
+                Manual Barcode / ID Registration:
+                {% else %}
+                Manual Barcode / ID Lookup:
+                {% endif %}
+            </div>
+          </div>
+          <div class="FlexPanel form-field-input-panel">
+            <input type="text" id="manualsearchtext" placeholder="Search..">
+              <button onclick="manualsearch()" id="searchbutton">Submit</button>
+          </div>
+        {% if header == "ENTRY Security" or header == "EXIT Security"%}
+            <br>
+        <div class="form-field-caption-panel">
+            <div class="gwt-Label form-field-caption">
+                CLIP Staff ID Scan:
+            </div>
+          </div>
+          <div class="FlexPanel form-field-input-panel">
+            <input type="text" id="staffsearchtext" placeholder="Enter Staff ID..">
+              <button onclick="manualsearchstaff()" id="searchstaffbutton">Submit</button>
+          </div>
+        {% endif %}
+        </div>
+    </div>
+  <script type="text/javascript">
+
+      hasSearched = false;
+
+      function runalert()
+    {
+        var md = new MobileDetect(window.navigator.userAgent);
+        if (md.os() === "iOS" && md.userAgent() !== "Safari") {
+            alert("ALERT\r\n\r\nYou are currently running iOS.\r\nScanning is only supported with Safari.\r\nPlease open this website in Safari.");
+            window.location.replace("/");
+        }
+        if (md.mobile() === null) {
+            alert("ALERT\r\n\r\nYou are currently not on Mobile.\r\nScanning is only supported with mobile devices.\r\nPlease open this website in a mobile device to scan.");
+            window.location.replace("/");
+        }
+    }
+
+    function manualsearch()
+    {
+        onQRCodeScanned(document.getElementById("manualsearchtext").value)
+    }
+
+    function manualsearchstaff()
+    {
+        onQRCodeScanned(document.getElementById("staffsearchtext").value)
+    }
+
+    function onQRCodeScanned(scannedText)
+    {
+        if (hasSearched === false) {
+            var txt1 = "/{{ redirectbasedir }}/";
+            hasSearched = true;
+            if (is_url(scannedText)) {
+                var txt2 = txt1 + "error/";
+                window.location.replace(txt2)
+            } else {
+                var txt2 = txt1 + scannedText + "/";
+                window.location.replace(txt2)
+            }
+        }
+
+    }
+
+    function provideVideo()
+    {
+        var n = navigator;
+
+        if (n.mediaDevices && n.mediaDevices.getUserMedia)
+        {
+          return n.mediaDevices.getUserMedia({
+            video: {
+              facingMode: "environment"
+            },
+            audio: false
+          });
+        }
+
+        return Promise.reject('Your browser does not support getUserMedia');
+    }
+
+    function provideVideoQQ()
+    {
+        return navigator.mediaDevices.enumerateDevices()
+        .then(function(devices) {
+            var exCameras = [];
+            devices.forEach(function(device) {
+            if (device.kind === 'videoinput') {
+              exCameras.push(device.deviceId)
+            }
+         });
+
+            return Promise.resolve(exCameras);
+        }).then(function(ids){
+            if(ids.length === 0)
+            {
+              return Promise.reject('Could not find a webcam');
+            }
+
+            return navigator.mediaDevices.getUserMedia({
+                video: {
+                  'optional': [{
+                    'sourceId': ids.length === 1 ? ids[0] : ids[1],
+                    }]
+                }
+            });
+        });
+    }
+
+
+    //this function will be called when JsQRScanner is ready to use
+    function JsQRScannerReady()
+    {
+        //create a new scanner passing to it a callback function that will be invoked when
+        //the scanner succesfully scan a QR code
+        var jbScanner = new JsQRScanner(onQRCodeScanned);
+        //var jbScanner = new JsQRScanner(onQRCodeScanned, provideVideo);
+        //reduce the size of analyzed image to increase performance on mobile devices
+        jbScanner.setSnapImageMaxSize(300);
+        jbScanner.setScanInterval(200);
+    	var scannerParentElement = document.getElementById("scanner");
+    	if(scannerParentElement)
+    	{
+    	    //append the jbScanner to an existing DOM element
+    		jbScanner.appendTo(scannerParentElement);
+    	}
+    }
+
+    function is_url(str)
+    {
+        var regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+            return regexp.test(str);
+    }
+
+    var input = document.getElementById("manualsearchtext");
+    input.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("searchbutton").click();
+        }
+    });
+
+    var input2 = document.getElementById("staffsearchtext");
+    input2.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("searchstaffbutton").click();
+        }
+    });
+  </script>
+
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                  <h4 class="card-title text-center">CONFIRM DATABASE EXPORT?</h4>
+                    <h5 class="card-title text-center">Exports to /private_files/exports<br><br></h5>
+                  <form action="/admin-badge-export-confirmation/" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br><input class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" value="Proceed"><br>
+                  </form>
+                  <button class="btn btn-lg btn-secondary btn-block text-uppercase" onclick="window.location.replace('/admin-tools/');">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

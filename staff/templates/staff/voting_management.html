@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+<div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Voting Management<br></h5>
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/create-vote/';">Create Vote</button>
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/manage-vote/';">Manage Votes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">Attendee List By Committee:<br><br></h5>
+              {% if exists %}
+                  {% for committee in queryanswer %}
+                    <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/statistics-by-committee-details/{{ committee.id }}/';">{{committee.name}}</button>
+                  {% endfor %}
+              {% else %}
+                <b><br><br>No Matching Data Found!</b>
+              {% endif %}
+              <br><br><button class="btn btn-lg btn-secondary btn-block text-uppercase" onclick="window.location.href = '/';">Go Back</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

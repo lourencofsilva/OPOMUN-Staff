@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                  <h4 class="card-title text-center">Create Voting Procedure</h4>
+                  {% if error %} <h4 class="card-title text-center" style="color: red">Error - Please Check Form</h4>{% endif %}
+                  {% if error1 %} <h5 class="card-title text-center" style="color: red">You did not fill in the relevant country field</h5> {% endif %}
+                  {% if error2 %} <h5 class="card-title text-center" style="color: red">This voting procedure already exists</h5> {% endif %}
+                  {% if error3 %} <h5 class="card-title text-center" style="color: red">A voting procedure for this committee is already active. Only 1 voting procedure can run at a time.</h5> {% endif %}
+                  <form action="/create-vote/" method="post" style="text-align: center">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br><input class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" value="Submit Voting Procedure"><br>
+                  </form>
+                  <button class="btn btn-lg btn-secondary btn-block text-uppercase" onclick="window.location.replace('/');">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        selection = document.getElementById("id_type")
+        selection.onchange = function(){
+            if (selection.options[selection.selectedIndex].value === "RV") {
+                $(".card-body p:eq(2)").css("display", "none")
+            } else {
+                $(".card-body p:eq(2)").css("display", "block")
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "frontend_base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+  <div class="container center">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body centered">
+              <h5 class="card-title text-center"><b>Voting as {{ name }}</b><br></h5>
+              {% if error1 %}
+                  <h5 class="card-title text-center">There are currently no ongoing voting procedures for your committee. Click refresh to check for new voting procedures.</h5>
+                  <button type="button" class="btn btn-secondary" id="refresh">Refresh</button>
+              {% elif error2 %}
+                  <h5 class="card-title text-center">You have already voted for the current voting procedure, {{ vote }}. Click refresh to check for new voting procedures.</h5>
+                  <button type="button" class="btn btn-secondary" id="refresh">Refresh</button>
+              {% else %}
+                  <h5 class="card-title text-center">{{ vote }}</h5>
+                  {% if error3 %}
+                      <br><br><h5 class="card-title text-center">Your vote has been registered! Click refresh to check for new voting procedures.</h5>
+                      <button type="button" class="btn btn-secondary" id="refresh">Refresh</button>
+                  {% else %}
+                      <button type="button" class="btn btn-success" id="favour">In Favour</button>
+                      <button type="button" class="btn btn-danger" id="against">Against</button>
+                      {% if vote.voting_type != "RV" %}
+                        <button type="button" class="btn btn-secondary" id="abstention">Abstention</button>
+                      {% endif %}
+                  {% endif %}
+              {% endif %}
+          <br><br>
+          <button type="button" class="btn btn-link" id="logout">Logout from {{ name }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        document.getElementById("logout").onclick = function () {
+            if (confirm("Are you sure that you wish to logout? You will have to reenter your voting code if you do so.")) {
+                window.location.href = "/frontend/auth/?remove=true";
+            }
+        }
+
+        {% if not error1 and not error2 and not error3 %}
+            document.getElementById("favour").onclick = function () {
+                if (confirm("Are you sure that you wish to vote in favour?")) {
+                    window.location.replace("/frontend/vote/?auth=".concat("{{ auth }}").concat("&decision=favour"));
+                }
+            }
+
+            document.getElementById("against").onclick = function () {
+                if (confirm("Are you sure that you wish to vote against?")) {
+                    window.location.replace("/frontend/vote/?auth=".concat("{{ auth }}").concat("&decision=against"));
+                }
+            }
+
+            document.getElementById("abstention").onclick = function () {
+                if (confirm("Are you sure that you wish to abstain?")) {
+                    window.location.replace("/frontend/vote/?auth=".concat("{{ auth }}").concat("&decision=abstention"));
+                }
+            }
+        {% else %}
+            document.getElementById("refresh").onclick = function () {
+                window.location.href = "/frontend/auth/"
+            }
+        {% endif %}
+    </script>
+
+    <style>
+        html {
+            overflow-y: hidden;
+        }
+
+        .center {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 500px;
+        }
+    </style>
+{% endblock %}

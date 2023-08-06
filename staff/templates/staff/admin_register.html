@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+
+<div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <div class="row-element">
+        <div class="form-field form-field-memo">
+          <div class="form-field-caption-panel">
+            <div class="gwt-Label form-field-caption">
+                <b>(Un)Register Visitor / Staff:</b>
+            </div>
+          </div>
+        <div class="centered">
+        {% if exists %}
+            {% for item in queryanswer %}
+            {% if item.has_registered %}
+                <a href="/unregistration-details/{{ item.id }}/"><br><br>
+                    <button class="small green button">Registered</button>
+            {% else %}
+                <a href="/registration-details/{{ item.id }}/"><br><br>
+                <button class="small red button">Not Registered</button>
+            {% endif %}      {{ item.name }}</a>
+            {% endfor %}
+        {% else %}
+            <b><br><br>No Matching Data Found!</b>
+        {% endif %}
+        <br><br><br><br><button class="btn btn-lg btn-secondary btn-block text-uppercase" onclick="window.location.replace('/admin-tools/');">Go Back</button>
+        </div>
+        </div>
+    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

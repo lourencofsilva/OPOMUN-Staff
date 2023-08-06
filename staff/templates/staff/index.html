@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+    {% if not authenticated %}
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">You are not currently logged in!</h5>
+                  <h5 class="card-title text-center">Please login below!</h5>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/2020staffaccounts/login/?next=/';">Sign in</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+        <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">Welcome, {{ user.first_name }} {{ user.last_name }}!<br></h5>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/scanner-choice/';">Scanners</button>
+                  {% if voting %}<button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/voting-management/';">Voting Management</button> {% endif %}
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/statistics-in-venue/';">List of People In Venue</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/statistics-by-committee/';">Attendee List By committee</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/statistics-not-registered/';">Not Registered Tickets</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/search/';">Attendee Search</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/schedules/';">Schedules</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/statistics-get-help/';">Get Help</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">Choose Admin Tool:<br><br></h5>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-register/';">(Un)Register Visitor / Staff</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-count-reset-confirmation/';">Venue Count Reset</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-regenerate-confirmation/';">Regenerate Tickets</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-badge-export-confirmation/';">Badge CSV Export</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-database-import-confirmation/';">Database CSV Import</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-database-check-confirmation/';">Database Check</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-email-send-confirmation/';">Email Mass Send</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/admin-accounts-confirmation/';">Accounts Management</button>
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" onclick="window.location.href = '/2020staffaccounts/';">Database Control</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

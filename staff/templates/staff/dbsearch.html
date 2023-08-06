@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block bodycontent %}
+
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <div class="row-element">
+        <div class="form-field form-field-memo">
+          <div class="form-field-caption-panel">
+            <div class="gwt-Label form-field-caption">
+                <b>OPOMUN Database Search</b><br>Search by Name:<br><br>
+            </div>
+          </div>
+          <div class="FlexPanel form-field-input-panel">
+            <input type="text" id="dbsearchtext" placeholder="Search..">
+              <button id="searchbutton" onclick="dbsearch()">Submit</button>
+          </div>
+        <div class="centered">
+        {% if exists %}
+            {% for item in queryanswer %}
+                <a href="/dbdetails/{{ item.id }}/"><br><br>
+                {% if item.in_venue %}<button class="small green button">In Venue</button>{% else %}<button class="small red button">Not In Venue</button>{% endif %}
+                    &nbsp;{{ item.name }}
+            {% endfor %}
+        {% else %}
+            <b><br><br>No Matching Data Found!</b>
+        {% endif %}
+        </div>
+        </div>
+    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <script type="text/javascript">
+
+    function isEmptyOrSpaces(str){
+        return str === null || str.match(/^\s*$/) !== null;
+    }
+
+    function dbsearch()
+    {
+        var txt1 = "/dbsearch/";
+        var txt2 = document.getElementById("dbsearchtext").value;
+        if (isEmptyOrSpaces(txt2)) {
+              alert("Search Query Cannot Be Empty!")
+        } else {
+            window.location.href = txt1 + txt2 + "/";
+        }
+    }
+
+    var input = document.getElementById("dbsearchtext");
+    input.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("searchbutton").click();
+        }
+    });
+</script>
+{% endblock %}
